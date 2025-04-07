@@ -13,7 +13,13 @@
 
         @foreach ($salle as $sall)
         <div>
-            <strong>{{ $sall->Nom }}</strong>
+            <strong>{{ $sall->Nom }}</strong>sall - {{ $sall->espace }}
+            <a href="{{ route('salle.edit', $sall) }}">Modifier</a>
+            {{-- <form action="{{ route("salle.delete",$salle) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit">Supprimer</button>
+            </form> --}}
         </div>
         @endforeach
     </div>

@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Salle extends Model
 {
-    protected $fillable = ['Nom','espace'];
+    protected $fillable = ['Nom','espace','natureId'];
     // relation
-    public function natures()
+    public function nature()
     {
         return $this->belongsTo(Nature::class);
     }

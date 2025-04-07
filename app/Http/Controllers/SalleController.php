@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\NatureService;
 use App\Services\SalleService;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,10 @@ class SalleController extends Controller
      * Display a listing of the resource.
      */
     protected $salleService;
-    public function __construct(SalleService $salleService){
+    protected $natureService;
+    public function __construct(SalleService $salleService , NatureService $natureService){
         $this->salleService = $salleService;
-
+        $this->natureService = $natureService;
     }
     public function index()
     {
@@ -29,7 +31,8 @@ class SalleController extends Controller
      */
     public function create()
     {
-        return view('salle.form');
+        $nature =$this->natureService->getAllNature();
+        return view('salle.form',compact('nature'));
     }
 
     /**
@@ -37,7 +40,10 @@ class SalleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->salleService->createSalle($request->validate(['Nom'=>'required|string|max:20','espace'=>'required|string']));
+        $this->salleService->createSalle($request->validate([
+            'Nom'=>'required|string|max:250','espace'=>'required|integer','natureId'=>'required'
+        ]));
+
         return redirect()->route('salle.index')->with(['success', 'Salle Created']);
     }
 
@@ -55,7 +61,8 @@ class SalleController extends Controller
     public function edit(string $id)
     {
         $salle = $this->salleService->findSalle($id);
-        return view('nature.edit',compact('salle'));
+        $nature = $this->natureService->getAllNature();
+        return view('salle.edit',compact('salle','nature'));
     }
 
     /**
@@ -63,7 +70,8 @@ class SalleController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $this->salleService->updateSalle($id , $request->validate(['Nom' => 'required|string','espace' => 'required|integer']));
+        
+        $this->salleService->updateSalle($id , $request->validate(['Nom' => 'required|string','espace' => 'required|integer','natureId'=>'required|exists']));
         return redirect()->route('salle.index')->with(['success', 'Salle Updated']);
     }
 

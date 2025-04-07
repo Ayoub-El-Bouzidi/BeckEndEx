@@ -11,9 +11,13 @@ class SalleService
 
     public function createSalle(array $data)
     {
+
         return Salle::create($data);
     }
-    
+    public function findSalle($id)
+    {
+        return Salle::with('nature')->findOrFail($id);
+    }
     public function updateSalle($id ,array $data)
     {
         $salle = Salle::findOrFail($id);
